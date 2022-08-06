@@ -14,6 +14,12 @@ public class ResourceManager : BaseManager<ResourceManager>
     {
         T res = Resources.Load<T>(name);
         //如果对象是GameObject类型，将其实例化后再返回出去
+#if UNITY_EDITOR
+        if (res == null)
+        {
+            Debug.LogError(name + " not found!");
+        }
+#endif
         if (res is GameObject)
         {
             return GameObject.Instantiate(res) as T;
@@ -37,6 +43,12 @@ public class ResourceManager : BaseManager<ResourceManager>
     {
         ResourceRequest r = Resources.LoadAsync<T>(name);
         yield return r;
+#if UNITY_EDITOR
+        if (r.asset == null)
+        {
+            Debug.LogError(name + " not found!");
+        }
+#endif
 
         if (r.asset is GameObject)
         {
